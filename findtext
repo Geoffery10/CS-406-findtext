@@ -1,6 +1,6 @@
 #!/bin/bash 
 # Author: Geoffery Powell <powellgeoffery@gmail.com>
-# Purpose: print the absolute path of all input paths
+# Purpose: Print matching info from provided directories
 # Syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
 
 #### Fuctions
@@ -16,33 +16,36 @@ function printDir {
 
 #### MAIN
 
-#echo "Positional Parameters"
-
-if [[ $1 == "[--program="* ]]; then
-    PROGRAM=$(echo $1 | cut -d'=' -f 2)
-    PATTERN=$2
-    argCount=4
-else
-    PROGRAM="NULL"
-    PATTERN=$1
-    argCount=3
-fi
-
-echo $PROGRAM
-echo $PATTERN
-
-#Take in directories
-for dir in "${@:argCount}"; do
-    if [ -d "$dir" ]
-    then
-        printDir $dir
+if [ $# >= 2]; then
+    if [[ $1 == "[--program="* ]]; then
+        PROGRAM=$(echo $1 | cut -d'=' -f 2)
+        PATTERN=$2
+        argCount=4
     else
-        echo "$dir was not found"
+        PROGRAM="NULL"
+        PATTERN=$1
+        argCount=3
     fi
-done
+
+    echo $PROGRAM
+    echo $PATTERN
+
+    # Take in directories
+    for dir in "${@:argCount}"; do
+        if [ -d "$dir" ]
+        then
+            printDir $dir
+        else
+            echo "$dir was not found"
+        fi
+    done
 
 
-# Successful competion:
-exit 0
+    # Successful competion:
+    exit 0
+else
+    # Unsuccessful too few args
+    exit 1
+fi
 
 # EOF
