@@ -1,6 +1,7 @@
 #!/bin/bash 
-
-#syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
+# Author: Geoffery Powell <powellgeoffery@gmail.com>
+# Purpose: print the absolute path of all input paths
+# Syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
 
 #### Fuctions
 
@@ -16,14 +17,22 @@ function printDir {
 #### MAIN
 
 #echo "Positional Parameters"
-PROGRAM=$1
-PATTERN=$2
 
-#echo $PROGRAM
-#echo $PATTERN
+if [[ $1 == "[--program="* ]]; then
+    PROGRAM=$(echo $1 | cut -d'=' -f 2)
+    PATTERN=$2
+    argCount=4
+else
+    PROGRAM="NULL"
+    PATTERN=$1
+    argCount=3
+fi
+
+echo $PROGRAM
+echo $PATTERN
 
 #Take in directories
-for dir in "${@:3}"; do
+for dir in "${@:argCount}"; do
     if [ -d "$dir" ]
     then
         printDir $dir
