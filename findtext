@@ -24,7 +24,12 @@ PATTERN=$2
 
 #Take in directories
 for dir in "${@:3}"; do
-    printDir $dir
+    if [ -d "$dir" ]
+    then
+        printDir $dir
+    else
+        echo "$dir was not found"
+    fi
 done
 
 
