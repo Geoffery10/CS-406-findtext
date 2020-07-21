@@ -16,9 +16,10 @@ function printDir {
 
 #### MAIN
 
-if [ $# >= 2]; then
+if [ $# -ge 2 ]; then
     if [[ $1 == "[--program="* ]]; then
         PROGRAM=$(echo $1 | cut -d'=' -f 2)
+        PROGRAM=${PROGRAM%?}
         PATTERN=$2
         argCount=4
     else
@@ -45,6 +46,7 @@ if [ $# >= 2]; then
     exit 0
 else
     # Unsuccessful too few args
+    echo "Not enough args were provided."
     exit 1
 fi
 
