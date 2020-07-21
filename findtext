@@ -2,9 +2,25 @@
 
 #syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
 
+function printDir {
+    for f in "$1"/*
+    do
+        echo $(basename $f)
+    done
+}
+
+
 #### MAIN
 
 echo "Positional Parameters"
-echo '$1 = ' $1
-echo '$2 = ' $2
-echo '$3 = ' $3
+PROGRAM=$1
+PATTERN=$2
+
+
+DIRECTORY=$3
+
+echo $PROGRAM
+echo $PATTERN
+echo $DIRECTORY
+
+printDir $DIRECTORY
