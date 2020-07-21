@@ -5,7 +5,7 @@
 #### Fuctions
 
 function printDir {
-    shopt -s dotglob
+    shopt -s dotglob #Shows hidden or "." files
     for file in "$1"/*
     do
         echo $(basename $file)
@@ -15,18 +15,17 @@ function printDir {
 
 #### MAIN
 
-echo "Positional Parameters"
+#echo "Positional Parameters"
 PROGRAM=$1
 PATTERN=$2
 
+#echo $PROGRAM
+#echo $PATTERN
 
-DIRECTORY=$3
-
-echo $PROGRAM
-echo $PATTERN
-echo $DIRECTORY
-
-printDir $DIRECTORY
+#Take in directories
+for dir in "${@:3}"; do
+    printDir $dir
+done
 
 
 # Successful competion:
