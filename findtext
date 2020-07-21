@@ -2,10 +2,13 @@
 
 #syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
 
+#### Fuctions
+
 function printDir {
-    for f in "$1"/*
+    shopt -s dotglob
+    for file in "$1"/*
     do
-        echo $(basename $f)
+        echo $(basename $file)
     done
 }
 
@@ -24,3 +27,9 @@ echo $PATTERN
 echo $DIRECTORY
 
 printDir $DIRECTORY
+
+
+# Successful competion:
+exit 0
+
+# EOF
