@@ -10,13 +10,23 @@ function printDir {
     for file in "$1"/*
     do
         fileName=$(basename $file)
-        echo $file
+        #length=${#fileName}
+        #file=${file%length}
+        #file=$file \"$fileName\"
+        result=$(grep $2 $file)
+        if [ ! -z "$result" ];
+        then
+            echo $result
+        fi
+        #grep "$PATTERN" $file
+        #echo $file
     done
 }
 
 
 #### MAIN
-
+cwd=$(pwd)
+echo Current Working Directory: $(pwd)
 if [ $# -ge 2 ]; then
     if [[ $1 == "[--program="* ]]; then
         PROGRAM=$(echo $1 | cut -d'=' -f 2)
@@ -29,15 +39,16 @@ if [ $# -ge 2 ]; then
         argCount=2
     fi
 
-    echo $PROGRAM
-    echo $PATTERN
+    PATTERN=$PATTERN
+    echo Program: $PROGRAM
+    echo Pattern: $PATTERN
 
     # Take in directories
     for dir in "${@:argCount}"; do
         if [ -d "$dir" ]
         then
             dir=$(readlink -f  $dir)
-            printDir $dir
+            printDir $dir $PATTERN
         else
             echo "$dir was not found"
         fi
