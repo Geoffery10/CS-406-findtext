@@ -9,7 +9,8 @@ function printDir {
     shopt -s dotglob #Shows hidden or "." files
     for file in "$1"/*
     do
-        echo $(basename $file)
+        fileName=$(basename $file)
+        echo $file
     done
 }
 
@@ -21,11 +22,11 @@ if [ $# -ge 2 ]; then
         PROGRAM=$(echo $1 | cut -d'=' -f 2)
         PROGRAM=${PROGRAM%?}
         PATTERN=$2
-        argCount=4
+        argCount=3
     else
         PROGRAM="NULL"
         PATTERN=$1
-        argCount=3
+        argCount=2
     fi
 
     echo $PROGRAM
@@ -35,6 +36,7 @@ if [ $# -ge 2 ]; then
     for dir in "${@:argCount}"; do
         if [ -d "$dir" ]
         then
+            dir=$(readlink -f  $dir)
             printDir $dir
         else
             echo "$dir was not found"
