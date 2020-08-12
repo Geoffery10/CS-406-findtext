@@ -1,7 +1,7 @@
-#!/bin/bash 
+#!/usr/bin/bash
 # Author: Geoffery Powell <powellgeoffery@gmail.com>
 # Purpose: Print matching info from provided directories
-# Syntax: findtext [--program=PROGRAM] PATTERN DIRECTORY
+# Syntax: dirclean [--program=PROGRAM] PATTERN DIRECTORY
 
 #### Fuctions
 
