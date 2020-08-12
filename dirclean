@@ -4,9 +4,20 @@
 # Syntax: dirclean [--test] DIRECTORY PATTERN
 # Example: ./dirclean --test temp "*.bak" "*.back" "*~"
 
-#### Fuctions
+$filesToDelete[]
 
-printDir () { #$1=Dir $2=Test $3+=Pattern
+#### Fuctions
+rmFiles () { 
+    for file in "{$filesToDelete[@]}"
+    do
+        echo "Deleting file: $file"
+        if [ $1 == false ]; then
+                rm $file
+        fi
+    done
+}
+
+printDir () { #$1=Dir $2+=Pattern
     shopt -s dotglob #Shows hidden or "." files
     cwd=$(pwd)
     #echo Current Working Directory: $(pwd)
@@ -15,11 +26,9 @@ printDir () { #$1=Dir $2=Test $3+=Pattern
     do
         fileName=$(basename $file)
         #echo File Name: $fileName
-        if [[ "$fileName" =~ ["$3"] ]]; then
-            echo "Deleting file: $file"
-            if [ $2 == false ]; then
-                rm $file
-            fi
+        if [[ "$fileName" =~ ["$2"] ]]; then
+            
+            
         fi
         #length=${#fileName}
         #file=${file%length}
