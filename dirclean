@@ -1,23 +1,34 @@
 #!/usr/bin/bash
 # Author: Geoffery Powell <powellgeoffery@gmail.com>
 # Purpose: Print matching info from provided directories
-# Syntax: dirclean [--program=PROGRAM] PATTERN DIRECTORY
+# Syntax: dirclean [--test] DIRECTORY PATTERN
+# Example: ./dirclean --test temp "*.bak" "*.back" "*~"
 
 #### Fuctions
 
-function printDir {
+printDir () { #$1=Dir $2=Test $3+=Pattern
     shopt -s dotglob #Shows hidden or "." files
-    for file in "$1"/*
+    cwd=$(pwd)
+    #echo Current Working Directory: $(pwd)
+    #echo "Pattern: $3"
+    for file in "$(pwd)"/*
     do
         fileName=$(basename $file)
+        #echo File Name: $fileName
+        if [[ "$fileName" =~ ["$3"] ]]; then
+            echo "Deleting file: $file"
+            if [ $2 == false ]; then
+                rm $file
+            fi
+        fi
         #length=${#fileName}
         #file=${file%length}
         #file=$file \"$fileName\"
-        result=$(grep $2 $file)
-        if [ ! -z "$result" ];
-        then
-            echo $result
-        fi
+        #result=$(grep $2 $file)
+        #if [ ! -z "$result" ];
+        #then
+        #    echo $result
+        #fi
         #grep "$PATTERN" $file
         #echo $file
     done
@@ -26,33 +37,38 @@ function printDir {
 
 #### MAIN
 cwd=$(pwd)
-echo Current Working Directory: $(pwd)
+# echo Current Working Directory: $(pwd)
 if [ $# -ge 2 ]; then
-    if [[ $1 == "[--program="* ]]; then
-        PROGRAM=$(echo $1 | cut -d'=' -f 2)
-        PROGRAM=${PROGRAM%?}
-        PATTERN=$2
+    if [[ $1 == "--test"* ]]; then
+        echo "Test: True"
+        TEST=true
+        DIRECTORY=$2
         argCount=3
     else
-        PROGRAM="NULL"
-        PATTERN=$1
+        echo "Test: False"
+        TEST=false
+        DIRECTORY=$1
         argCount=2
     fi
 
-    PATTERN=$PATTERN
-    echo Program: $PROGRAM
-    echo Pattern: $PATTERN
+    FULLPATH=$cwd"/"$DIRECTORY
+    echo Directory: $DIRECTORY
 
-    # Take in directories
-    for dir in "${@:argCount}"; do
-        if [ -d "$dir" ]
-        then
-            dir=$(readlink -f  $dir)
-            printDir $dir $PATTERN
-        else
-            echo "$dir was not found"
-        fi
-    done
+    if [ -d "$DIRECTORY" ]
+    then
+        cd ./$DIRECTORY
+        echo "Searching $FULLPATH"
+        echo ""
+        # Take in patterns
+        for PATTERN in "${@:argCount}"; do
+            dir=$(readlink -f  $DIRECTORY)
+            echo "Pattern: $PATTERN"
+            printDir $DIRECTORY $TEST "$PATTERN"
+            echo ""
+        done
+    else
+        echo "$FULLPATH was not found"
+    fi
 
 
     # Successful competion:
@@ -60,6 +76,7 @@ if [ $# -ge 2 ]; then
 else
     # Unsuccessful too few args
     echo "Not enough args were provided."
+    echo "Useage: dirclean [--test] DIRECTORY PATTERN"
     exit 1
 fi
 
