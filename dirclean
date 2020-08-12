@@ -4,7 +4,7 @@
 # Syntax: dirclean [--test] DIRECTORY PATTERN
 # Example: ./dirclean --test temp "*.bak" "*.back" "*~"
 
-$filesToDelete[]
+filesToDelete=()
 
 #### Fuctions
 rmFiles () { 
@@ -20,15 +20,26 @@ rmFiles () {
 printDir () { #$1=Dir $2+=Pattern
     shopt -s dotglob #Shows hidden or "." files
     cwd=$(pwd)
+    matchFound=false
     #echo Current Working Directory: $(pwd)
     #echo "Pattern: $3"
     for file in "$(pwd)"/*
     do
         fileName=$(basename $file)
-        #echo File Name: $fileName
-        if [[ "$fileName" =~ ["$2"] ]]; then
-            
-            
+        echo "Filename: $fileName"
+        if [[ $fileName = $3 ]]; then
+            echo "$fileName matched pattern"
+            for item in "{$filesToDelete[@]}"
+            do
+                if [ "$fileName" == "$item" ]; then
+                    matchFound=true
+                    echo "Match was already in array."
+                fi
+            done
+            if [ matchFound == false ]; then
+                filesToDelete+=$fileName
+                echo "$fileName added to list"
+            fi
         fi
         #length=${#fileName}
         #file=${file%length}
@@ -79,7 +90,11 @@ if [ $# -ge 2 ]; then
         echo "$FULLPATH was not found"
     fi
 
-
+    echo "Thing to delete:"
+    for i in "${filesToDelete[@]}"
+    do
+        echo $i
+    done
     # Successful competion:
     exit 0
 else
